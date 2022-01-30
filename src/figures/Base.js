@@ -18,13 +18,16 @@ export class Base {
     this.container = container;
   }
 
-  draw(drawData = []) {
+  draw(drawData = [], lineNumber) {
     const subContainer = document.createElement("ul");
     subContainer.classList.add("sub-container");
 
-    drawData.forEach((item) => {
+    drawData.forEach((item, index) => {
       const el = document.createElement("li");
-      el.classList.add("field-item", item === 1 ? "active" : "non-active");
+      el.classList.add("field-item");
+      el.classList.toggle("active", item === 1);
+      el.setAttribute("data-x", index);
+      el.setAttribute("data-y", lineNumber);
 
       subContainer.appendChild(el);
     });

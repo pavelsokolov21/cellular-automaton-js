@@ -2,7 +2,7 @@ import { Pyramid, LifeGame } from "./figures";
 
 const lifeGame = new LifeGame();
 
-lifeGame.start();
+lifeGame.init();
 
 // const pyramid = new Pyramid();
 

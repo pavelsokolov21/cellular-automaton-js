@@ -3,8 +3,10 @@ import { Base } from "./Base";
 export class LifeGame extends Base {
   constructor() {
     super();
+    this.generationContainer = null;
     this.fieldSize = 45;
     this.field = [];
+    this.generation = 1;
   }
 
   setValues() {
@@ -24,7 +26,7 @@ export class LifeGame extends Base {
     // Count from "0"
     const livingCells = [
       {
-        lineIndex: 9,
+        lineIndex: 10,
         cellIndex: 11,
       },
       {
@@ -32,7 +34,7 @@ export class LifeGame extends Base {
         cellIndex: 10,
       },
       {
-        lineIndex: 10,
+        lineIndex: 9,
         cellIndex: 12,
       },
       {
@@ -40,20 +42,20 @@ export class LifeGame extends Base {
         cellIndex: 11,
       },
       {
-        lineIndex: 12,
+        lineIndex: 13,
         cellIndex: 10,
       },
       {
-        lineIndex: 12,
-        cellIndex: 12,
-      },
-      {
         lineIndex: 13,
-        cellIndex: 11,
+        cellIndex: 12,
       },
       {
         lineIndex: 14,
         cellIndex: 11,
+      },
+      {
+        lineIndex: 15,
+        cellIndex: 10,
       },
     ];
 
@@ -140,13 +142,17 @@ export class LifeGame extends Base {
         cellByCoord.classList.toggle("active", cellValue === 1);
       });
     });
+
+    this.generation++;
+
+    this.generationContainer.textContent = `Generation: ${this.generation}`;
   }
 
   makeGlider(iterations = 700) {
     for (let i = 0; i < iterations; i++) {
       setTimeout(() => {
-        this.field.forEach((line, lineIndex) => {
-          line.forEach((cell, cellIndex) => {
+        this.field = this.field.map((line, lineIndex) => {
+          return line.map((cell, cellIndex) => {
             const neighbors = Object.values(
               this.getNeighbors({ y: lineIndex, x: cellIndex })
             );
@@ -155,18 +161,18 @@ export class LifeGame extends Base {
             // If a cell is dead
             if (cell === 0) {
               if (livingNeighborsCount === 3) {
-                // A cell will born with 90% chance
-                this.field[lineIndex][cellIndex] = 1;
+                return 1;
               }
 
-              return;
+              return 0;
             }
 
             // If a cell is alive and doesn't have 2 or 3 neighbors then it will die
             if (livingNeighborsCount < 2 || livingNeighborsCount > 3) {
-              // A cell will die with 30% chance
-              this.field[lineIndex][cellIndex] = 0;
+              return 0;
             }
+
+            return 1;
           });
         });
 
@@ -186,12 +192,24 @@ export class LifeGame extends Base {
     document.querySelector("body").append(button);
   }
 
+  createCounter() {
+    const counter = document.createElement("div");
+    counter.classList.add("counter");
+    counter.innerText = `Generation: ${this.generation}`;
+
+    this.generationContainer = counter;
+
+    document.querySelector("body").append(counter);
+  }
+
   init() {
     this.createContainer("ul", "id=life-game");
     this.setValues();
     this.initGlider();
     this.initField();
     this.createStartButton();
+    this.createCounter();
+    // this.makeGlider();
   }
 
   start() {

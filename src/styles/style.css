@@ -1,0 +1,34 @@
+/* RESET */
+
+body {
+  padding: 10px;
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+/* Main styles */
+
+#pyramid,
+.sub-container {
+  display: flex;
+}
+
+#pyramid {
+  flex-direction: column;
+}
+
+.pyramid-item {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+.pyramid-item.active {
+  background: red;
+}

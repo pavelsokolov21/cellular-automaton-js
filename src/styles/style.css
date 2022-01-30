@@ -12,16 +12,16 @@ ul {
 
 /* Main styles */
 
-#pyramid,
+#field,
 .sub-container {
   display: flex;
 }
 
-#pyramid {
+#field {
   flex-direction: column;
 }
 
-.pyramid-item {
+.field-item {
   display: flex;
   width: 20px;
   height: 20px;
@@ -29,6 +29,6 @@ ul {
   box-sizing: border-box;
 }
 
-.pyramid-item.active {
+.field-item.active {
   background: red;
 }

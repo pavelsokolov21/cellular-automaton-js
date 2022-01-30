@@ -1,7 +1,9 @@
-export class Pyramid {
+import { Base } from "./Base";
+
+export class Pyramid extends Base {
   constructor() {
-    this.pyramidContainer = document.getElementById("pyramid");
-    this.COUNT = 61;
+    super();
+    this.count = 61;
     this.initArray = [];
   }
 
@@ -33,27 +35,14 @@ export class Pyramid {
     }
   }
 
-  draw(drawData = [], container) {
-    const subContainer = document.createElement("ul");
-    subContainer.classList.add("sub-container");
-
-    drawData.forEach((item) => {
-      const el = document.createElement("li");
-      el.classList.add("pyramid-item", item === 1 && "active");
-
-      subContainer.appendChild(el);
-    });
-
-    container.appendChild(subContainer);
-  }
-
   start() {
-    this.setInit(this.COUNT);
-    this.applyPyramid(this.COUNT);
+    this.createContainer("ul", "id=field");
+    this.setInit(this.count);
+    this.applyPyramid(this.count);
 
     this.initArray.forEach((line, index) => {
       setTimeout(() => {
-        this.draw(line, this.pyramidContainer);
+        this.draw(line);
       }, (index + 1) * 300);
     });
   }

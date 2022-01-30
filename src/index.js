@@ -1,5 +1,9 @@
-import { Pyramid } from "./pyramid";
+import { Pyramid, LifeGame } from "./figures";
 
-const pyramid = new Pyramid();
+const lifeGame = new LifeGame();
 
-pyramid.start();
+lifeGame.start();
+
+// const pyramid = new Pyramid();
+
+// pyramid.start();

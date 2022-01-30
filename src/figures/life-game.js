@@ -1,20 +1,21 @@
+import { getRandomArbitrary } from "../utils";
 import { Base } from "./Base";
 
 export class LifeGame extends Base {
-  constructor() {
+  constructor(config) {
     super();
     this.generationContainer = null;
-    this.fieldSize = 45;
     this.field = [];
     this.generation = 1;
+    this.config = config;
   }
 
   setValues() {
     // The field should be square
-    for (let i = 0; i < this.fieldSize; i++) {
+    for (let i = 0; i < this.config.fieldSize; i++) {
       const line = [];
 
-      for (let j = 0; j < this.fieldSize; j++) {
+      for (let j = 0; j < this.config.fieldSize; j++) {
         line.push(0);
       }
 
@@ -43,19 +44,27 @@ export class LifeGame extends Base {
       },
       {
         lineIndex: 13,
-        cellIndex: 10,
+        cellIndex: 11,
       },
       {
         lineIndex: 13,
         cellIndex: 12,
       },
       {
-        lineIndex: 14,
+        lineIndex: 15,
         cellIndex: 11,
       },
       {
         lineIndex: 15,
         cellIndex: 10,
+      },
+      {
+        lineIndex: 15,
+        cellIndex: 12,
+      },
+      {
+        lineIndex: 14,
+        cellIndex: 12,
       },
     ];
 
@@ -75,7 +84,7 @@ export class LifeGame extends Base {
   getNeighbors(coordinates) {
     // Coordinates start from "0"
     const { x, y } = coordinates;
-    const lastIndex = this.fieldSize - 1;
+    const lastIndex = this.config.fieldSize - 1;
 
     const top = y === 0 ? this.field[lastIndex][x] : this.field[y - 1][x];
     const right = x === lastIndex ? this.field[y][0] : this.field[y][x + 1];
@@ -148,9 +157,24 @@ export class LifeGame extends Base {
     this.generationContainer.textContent = `Generation: ${this.generation}`;
   }
 
-  makeGlider(iterations = 700) {
+  changeStateOfRandomCell(chance) {
+    const random = Math.random();
+
+    if (chance > random) {
+      const y = getRandomArbitrary(0, this.config.fieldSize - 1);
+      const x = getRandomArbitrary(0, this.config.fieldSize - 1);
+
+      this.field[y][x] = this.field[y][x] === 1 ? 0 : 1;
+    }
+  }
+
+  makeGlider(iterations = 1000) {
     for (let i = 0; i < iterations; i++) {
       setTimeout(() => {
+        this.changeStateOfRandomCell(
+          this.config.random.changingStateOfRandomCell
+        );
+
         this.field = this.field.map((line, lineIndex) => {
           return line.map((cell, cellIndex) => {
             const neighbors = Object.values(
@@ -161,7 +185,9 @@ export class LifeGame extends Base {
             // If a cell is dead
             if (cell === 0) {
               if (livingNeighborsCount === 3) {
-                return 1;
+                const random = Math.random();
+
+                return random > this.config.random.cellStayDead ? 1 : 0;
               }
 
               return 0;
@@ -169,7 +195,9 @@ export class LifeGame extends Base {
 
             // If a cell is alive and doesn't have 2 or 3 neighbors then it will die
             if (livingNeighborsCount < 2 || livingNeighborsCount > 3) {
-              return 0;
+              const random = Math.random();
+
+              return random > this.config.random.cellStayAlive ? 0 : 1;
             }
 
             return 1;

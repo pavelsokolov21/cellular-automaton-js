@@ -2,6 +2,7 @@ import { Pyramid, LifeGame } from "./figures";
 
 const lifeGame = new LifeGame({
   fieldSize: 46,
+  maximumIterations: 1000,
   random: {
     changingStateOfRandomCell: 0.7,
     cellStayDead: 0.17,

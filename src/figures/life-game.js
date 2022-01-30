@@ -168,7 +168,7 @@ export class LifeGame extends Base {
     }
   }
 
-  makeGlider(iterations = 1000) {
+  makeLifeGame(iterations = 1000) {
     for (let i = 0; i < iterations; i++) {
       setTimeout(() => {
         this.changeStateOfRandomCell(
@@ -237,10 +237,9 @@ export class LifeGame extends Base {
     this.initField();
     this.createStartButton();
     this.createCounter();
-    // this.makeGlider();
   }
 
   start() {
-    this.makeGlider();
+    this.makeLifeGame(this.config.maximumIterations);
   }
 }

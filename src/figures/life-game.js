@@ -220,26 +220,11 @@ export class LifeGame extends Base {
     document.querySelector("body").append(button);
   }
 
-  createCounter() {
-    const counter = document.createElement("div");
-    counter.classList.add("counter");
-    counter.innerText = `Generation: ${this.generation}`;
-
-    this.generationContainer = counter;
-
-    document.querySelector("body").append(counter);
-  }
-
-  init() {
+  start() {
     this.createContainer("ul", "id=life-game");
     this.setValues();
     this.initGlider();
     this.initField();
-    this.createStartButton();
-    this.createCounter();
-  }
-
-  start() {
     this.makeLifeGame(this.config.maximumIterations);
   }
 }

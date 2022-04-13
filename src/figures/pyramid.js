@@ -3,8 +3,12 @@ import { Base } from "./Base";
 export class Pyramid extends Base {
   constructor() {
     super();
-    this.count = 61;
+    this.iterations = 100;
+    this.count = this.iterations * 2 + 1;
+    this.probabilitySetPoint = 5;
     this.initArray = [];
+    this.probabilitiesArray = Array(this.count).fill(0, 0, this.count);
+    this.positiveProbability = 0.7;
   }
 
   setInit(count) {
@@ -18,20 +22,64 @@ export class Pyramid extends Base {
     this.initArray.push(arr);
   }
 
-  applyPyramid(count, maxIteration = 30) {
-    for (let j = 0; j < maxIteration; j++) {
+  setProbability() {
+    const lastLine = this.initArray[this.initArray.length - 1];
+
+    lastLine.forEach((element, index) => {
+      if (element === 1) {
+        this.probabilitiesArray[index]++;
+      }
+    });
+  }
+
+  calculateEntropy() {
+    // Мб количество запусков автомата
+    const countOfSetPoints = Math.floor(
+      this.iterations / this.probabilitySetPoint
+    );
+    const entropy = this.probabilitiesArray
+      .map((el) => el / countOfSetPoints)
+      .reduce((acc, el) => {
+        if (el) {
+          return acc + el * Math.log2(el);
+        }
+
+        return acc;
+      }, 0);
+
+    console.log(entropy);
+  }
+
+  applyPyramid(count) {
+    for (let j = 1; j <= this.iterations; j++) {
       const arr = [];
       const lastLine = this.initArray[this.initArray.length - 1];
 
       for (let i = 0; i < count; i++) {
+        const probability = Math.random();
         const currentElOfLine = lastLine[i];
         const prevElOfLine = i === 0 ? null : lastLine[i - 1];
         const nextElOfLine = i === count - 1 ? null : lastLine[i + 1];
+        const isAlive = prevElOfLine || currentElOfLine || nextElOfLine;
 
-        arr.push(prevElOfLine ^ currentElOfLine ^ nextElOfLine ? 1 : 0);
+        arr.push(
+          probability > this.positiveProbability
+            ? currentElOfLine
+            : isAlive
+            ? 1
+            : 0
+        );
       }
 
       this.initArray.push(arr);
+
+      if (j % this.probabilitySetPoint === 0) {
+        this.setProbability();
+      }
+
+      if (j === this.iterations) {
+        this.calculateEntropy();
+      }
     }
   }
 
@@ -43,7 +91,7 @@ export class Pyramid extends Base {
     this.initArray.forEach((line, index) => {
       setTimeout(() => {
         this.draw(line);
-      }, (index + 1) * 300);
+      }, (index + 1) * 100);
     });
   }
 }

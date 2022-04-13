@@ -20,4 +20,4 @@ const initGame = () => {
 
 const game = initGame();
 
-game.initLifeGame();
+game.initPyramid();
